@@ -1,7 +1,16 @@
-from algorithms import bfs, ucs, dfs, dls, ids, greedy_bfs, a_star
+from utils.graph import read_graph
+from algorithms.BFS import bfs
 
 def main():
-    print("Hello World!")
+    graph, start, goal = read_graph()
+
+    path, explored = bfs(graph, start, goal)
+
+    if path:
+        print(f"\nPath find: {' -> '.join(path)}")
+        print(f"\nExplored nodes: {explored}")
+    else:
+        print("Didn't find a solution")
 
 
 if __name__ == "__main__":
