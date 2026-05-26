@@ -1,13 +1,14 @@
-from utils.graph import read_graph
-from algorithms.BFS import bfs
+from utils import *
 
 def main():
     graph, start, goal = read_graph()
 
-    path, explored = bfs(graph, start, goal)
+
+
+    path, explored = ucs(graph, start, goal)
 
     if path:
-        print(f"\nPath find: {' -> '.join(path)}")
+        print(f"\nPath found: {' -> '.join(path)}")
         print(f"\nExplored nodes: {explored}")
     else:
         print("Didn't find a solution")
