@@ -1,3 +1,4 @@
+# Search algorithm: Depth First Search
 def dfs(graph, start ,goal):
     stack = [(start, [start])]
     visited = set()
@@ -17,6 +18,6 @@ def dfs(graph, start ,goal):
 
         for neighbor, cost in graph[node]:
             if neighbor not in visited:
-                stack.append((neighbor, path + neighbor))
+                stack.append((neighbor, path + [neighbor]))
 
     return None, explored

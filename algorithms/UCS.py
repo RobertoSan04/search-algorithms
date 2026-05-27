@@ -1,5 +1,6 @@
 import heapq
 
+# Search Algorithm: Uniform cost search
 def ucs(graph, start, goal):
     heap = []
     heapq.heappush(heap, (0, start, [start]))
