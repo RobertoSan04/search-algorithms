@@ -6,8 +6,8 @@ ALGORITHMS = {
     "3": ("DFS",        lambda g, s, gl: dfs(g, s, gl)),
     "4": ("DLS",        None),
     "5": ("IDS",        lambda g, s, gl: ids(g, s, gl)),
-    "6": ("Greedy BFS", lambda g, s, gl: greedy_bfs(g, s, gl)),
-    "7": ("A*",         lambda g, s, gl: a_star(g, s, gl)),
+    "6": ("Greedy BFS", None),
+    "7": ("A*",         None),
 }
 
 def print_menu(graph, start, goal):
@@ -39,7 +39,7 @@ def run_algorithm(key, graph, start, goal):
             except ValueError:
                 print("  Error: enter a valid integer.")
         path, explored = dls(graph, start, goal, limit)
-    elif key == "6":
+    elif key in ("6", "7"):
         print(" Enter heuristic values for each node: ")
         heuristic = {}
         for node in graph:
@@ -53,7 +53,10 @@ def run_algorithm(key, graph, start, goal):
                         break
                 except ValueError:
                     print("  Error: enter a valid number.")
-        path, explored = greedy_bfs(graph, start, goal, heuristic)
+        if key == "6":
+            path, explored = greedy_bfs(graph, start, goal, heuristic)
+        else:
+            path, explored = a_star(graph, start, goal, heuristic)
     else:
         path, explored = fn(graph, start, goal)
 

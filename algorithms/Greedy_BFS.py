@@ -1,5 +1,6 @@
 import heapq
 
+# Search Algorithm: Greedy BFS
 def greedy_bfs(graph, start, goal, heuristic):
     priority_queue = []
     heapq.heappush(priority_queue, (heuristic[start], start, [start]))
