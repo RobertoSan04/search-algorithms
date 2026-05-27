@@ -39,6 +39,21 @@ def run_algorithm(key, graph, start, goal):
             except ValueError:
                 print("  Error: enter a valid integer.")
         path, explored = dls(graph, start, goal, limit)
+    elif key == "6":
+        print(" Enter heuristic values for each node: ")
+        heuristic = {}
+        for node in graph:
+            while True:
+                try:
+                    h = float(input(f"  h({node}): "))
+                    if h < 0:
+                        print("  Error: heuristic must be non-negative.")
+                    else:
+                        heuristic[node] = h
+                        break
+                except ValueError:
+                    print("  Error: enter a valid number.")
+        path, explored = greedy_bfs(graph, start, goal, heuristic)
     else:
         path, explored = fn(graph, start, goal)
 

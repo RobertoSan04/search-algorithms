@@ -2,14 +2,14 @@ import heapq
 
 # Search Algorithm: Uniform cost search
 def ucs(graph, start, goal):
-    heap = []
-    heapq.heappush(heap, (0, start, [start]))
+    priority_queue = []
+    heapq.heappush(priority_queue, (0, start, [start]))
 
     visited = set()
     explored = []
 
-    while heap:
-        cost, node, path = heapq.heappop(heap)
+    while priority_queue:
+        cost, node, path = heapq.heappop(priority_queue)
 
         if node in visited:
             continue
@@ -22,7 +22,7 @@ def ucs(graph, start, goal):
 
         for neighbor, edge_cost in graph[node]:
             if neighbor not in visited:
-                heapq.heappush(heap, (cost + edge_cost, neighbor, path + [neighbor]))
+                heapq.heappush(priority_queue, (cost + edge_cost, neighbor, path + [neighbor]))
 
 
     return None, explored
