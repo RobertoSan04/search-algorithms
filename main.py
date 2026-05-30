@@ -10,24 +10,32 @@ ALGORITHMS = {
     "7": ("A*",         None),
 }
 
-def print_menu(graph, start, goal):
-    print("\n" + "=" * 40)
-    print("       Search Algorithms Menu")
-    print("=" * 40)
-    if graph:
-        print(f"  Graph: {len(graph)} nodes  |  {start} -> {goal}")
-    else:
-        print("  Graph: none loaded")
-    print("-" * 40)
-    print("  g. New graph")
-    for key, (name, _) in ALGORITHMS.items():
-        print(f"  {key}. {name}")
-    print("  0. Exit")
-    print("=" * 40)
+def _ask_heuristic(graph, preloaded=None):
+    if preloaded:
+        print("  Preloaded heuristic values:")
+        for node, h in preloaded.items():
+            print(f"    h({node}) = {h}")
+        answer = input("  Use preloaded heuristic? (y/n): ").strip().lower()
+        if answer == "y":
+            return preloaded
 
-def run_algorithm(key, graph, start, goal):
+    print("  Enter heuristic values for each node:")
+    heuristic = {}
+    for node in graph:
+        while True:
+            try:
+                h = float(input(f"    h({node}): "))
+                if h < 0:
+                    print("  Error: heuristic must be non-negative.")
+                else:
+                    heuristic[node] = h
+                    break
+            except ValueError:
+                print("  Error: enter a valid number.")
+    return heuristic
+
+def run_algorithm(key, graph, start, goal, heuristic=None):
     name, fn = ALGORITHMS[key]
-
     if key == "4":
         while True:
             try:
@@ -40,23 +48,11 @@ def run_algorithm(key, graph, start, goal):
                 print("  Error: enter a valid integer.")
         path, explored = dls(graph, start, goal, limit)
     elif key in ("6", "7"):
-        print(" Enter heuristic values for each node: ")
-        heuristic = {}
-        for node in graph:
-            while True:
-                try:
-                    h = float(input(f"  h({node}): "))
-                    if h < 0:
-                        print("  Error: heuristic must be non-negative.")
-                    else:
-                        heuristic[node] = h
-                        break
-                except ValueError:
-                    print("  Error: enter a valid number.")
+        h = _ask_heuristic(graph, heuristic)
         if key == "6":
-            path, explored = greedy_bfs(graph, start, goal, heuristic)
+            path, explored = greedy_bfs(graph, start, goal, h)
         else:
-            path, explored = a_star(graph, start, goal, heuristic)
+            path, explored = a_star(graph, start, goal, h)
     else:
         path, explored = fn(graph, start, goal)
 
@@ -67,26 +63,46 @@ def run_algorithm(key, graph, start, goal):
     else:
         print("No solution found.")
 
+def show_menu(graph, start, goal, ALGORITHMS, heuristic):
+    clear_console()
+    print_menu(graph, start, goal, ALGORITHMS, heuristic)
+    return input("Select an option: ").strip().lower()
+
 def main():
-    graph, start, goal = None, None, None
+    graph, start, goal, heuristic = None, None, None, None
 
     while True:
-        print_menu(graph, start, goal)
-        choice = input("Select an option: ").strip().lower()
+        choice = show_menu(graph, start, goal, ALGORITHMS, heuristic)
 
         if choice == "0":
+            clear_console()
             print("Goodbye!")
             break
-        elif choice == "g":
+
+        clear_console()
+        if choice == "g":
             graph, start, goal = read_graph()
+            heuristic = None
             print("  Graph loaded successfully.")
+            print_graph(graph, start, goal)
+        elif choice == "p":
+            graph, start, goal, heuristic = preloaded_graph()
+            print("  Preloaded graph loaded successfully.")
+            print_graph(graph, start, goal)
+        elif choice == "v":
+            if not graph:
+                print("  No graph loaded.")
+            else:
+                print_graph(graph, start, goal)
         elif choice in ALGORITHMS:
             if not graph:
-                print("  No graph loaded. Select 'g' to create one first.")
+                print("  No graph loaded. Select 'g' or 'p' to load a graph first.")
             else:
-                run_algorithm(choice, graph, start, goal)
+                run_algorithm(choice, graph, start, goal, heuristic)
         else:
             print("  Invalid option. Try again.")
+
+        wait_any_key()
 
 if __name__ == "__main__":
     main()

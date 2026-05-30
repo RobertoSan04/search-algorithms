@@ -1,4 +1,4 @@
-from algorithms.DLS import dls
+from algorithms.DLS import _dls
 
 # Search Algorithm: Iterative deepening search
 def ids(graph, start, goal):
@@ -6,13 +6,13 @@ def ids(graph, start, goal):
     limit = 0
 
     while True:
-        path, explored = dls(graph, start, goal, limit)
+        path, status, explored = _dls(graph, start, goal, limit)
         explored_all.extend(explored)
 
-        if path is not None:
+        if status == "found":
             return path, explored_all
 
-        if len(explored) == 0:
+        if status == "failure":   # no cutoff occurred -> search exhausted
             return None, explored_all
 
         limit += 1

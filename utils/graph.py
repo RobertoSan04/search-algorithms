@@ -3,6 +3,37 @@ def build_graph():
     graph = {}
     return graph
 
+def preloaded_graph():
+    """
+    7-node undirected weighted graph (S -> G).
+
+    Layout:
+        S --1-- A --2-- C
+        |       |       |
+        4       5       8
+        |       |       |
+        B --1-- D --4-- G
+        |               |
+        3               2
+        +------ E ------+
+
+    Heuristic (straight-line distance to G):
+        S=7, A=6, B=4, C=5, D=3, E=2, G=0
+    """
+    graph = {
+        "S": [("A", 1), ("B", 4)],
+        "A": [("S", 1), ("C", 2), ("D", 5)],
+        "B": [("S", 4), ("D", 1), ("E", 3)],
+        "C": [("A", 2), ("G", 8)],
+        "D": [("A", 5), ("B", 1), ("G", 4)],
+        "E": [("B", 3), ("G", 2)],
+        "G": [("C", 8), ("D", 4), ("E", 2)],
+    }
+    start     = "S"
+    goal      = "G"
+    heuristic = {"S": 7.0, "A": 6.0, "B": 4.0, "C": 5.0, "D": 3.0, "E": 2.0, "G": 0.0}
+    return graph, start, goal, heuristic
+
 def _read_positive_int(prompt, allow_zero=False):
     while True:
         try:
@@ -60,6 +91,12 @@ def read_graph():
                 continue
             if destination not in graph:
                 print(f"  Error: '{destination}' is not a known node.")
+                continue
+            if origin == destination:
+                print("  Error: self-loops are not allowed.")
+                continue
+            if destination in [d for d, _ in graph[origin]]:
+                print(f"  Error: edge '{origin}' -> '{destination}' already exists.")
                 continue
             try:
                 cost = float(raw_cost)

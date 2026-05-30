@@ -1,11 +1,16 @@
 # Search Algorithm: Depth Limited Search
 def dls(graph, start, goal, limit):
+    path, _status, explored = _dls(graph, start, goal, limit)
+    return path, explored
+
+def _dls(graph, start, goal, limit):
     explored = []
     result = recursive_dls(graph, start, goal, [start], limit, explored)
-
-    if result == "cutoff" or result is None:
-        return None, explored
-    return result, explored
+    if result == "cutoff":
+        return None, "cutoff", explored
+    if result is None:
+        return None, "failure", explored
+    return result, "found", explored
 
 
 def recursive_dls(graph, node, goal, path, limit, explored):
