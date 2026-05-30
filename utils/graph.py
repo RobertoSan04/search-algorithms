@@ -4,22 +4,6 @@ def build_graph():
     return graph
 
 def preloaded_graph():
-    """
-    7-node undirected weighted graph (S -> G).
-
-    Layout:
-        S --1-- A --2-- C
-        |       |       |
-        4       5       8
-        |       |       |
-        B --1-- D --4-- G
-        |               |
-        3               2
-        +------ E ------+
-
-    Heuristic (straight-line distance to G):
-        S=7, A=6, B=4, C=5, D=3, E=2, G=0
-    """
     graph = {
         "S": [("A", 1), ("B", 4)],
         "A": [("S", 1), ("C", 2), ("D", 5)],
